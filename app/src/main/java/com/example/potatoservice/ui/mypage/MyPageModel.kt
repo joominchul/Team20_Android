@@ -54,6 +54,9 @@ class MyPageModel(context : Context) {
     val volunteerHousr = MutableLiveData<Int>()
     val volunteerCount = MutableLiveData<Int>()
 
+    //리사이클러뷰 count
+    val recyclerViewCount = MutableLiveData<Int>()
+
     fun setVolunteerHours(){
         volunteerHousr.value = 199
     }
@@ -62,6 +65,9 @@ class MyPageModel(context : Context) {
         volunteerCount.value = 190
     }
 
+    fun setRecyclerViewCount(){
+        recyclerViewCount.value = 100
+    }
 
     //개인 봉사내역 데이터
 

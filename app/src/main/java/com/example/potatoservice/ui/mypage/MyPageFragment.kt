@@ -44,6 +44,7 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
 
         myPageViewModel.setVolunteerHours()
         myPageViewModel.setVolunteerCount()
+        myPageViewModel.setRecyclerViewCount()
         setUpInit()
 
     }
@@ -54,6 +55,7 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         setupTvLevel()
         setupTvTotalHours()
         setupTvTotalCount()
+        setupRecyclerViewCount()
     }
 
     // ProgressBar 설정 함수
@@ -85,6 +87,12 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
     private fun setupTvLevel(){
         myPageViewModel.vmLevel.observe(viewLifecycleOwner, Observer {
             binding.tvLevel.text = "Lv. ${it}"
+        })
+    }
+
+    private fun setupRecyclerViewCount(){
+        myPageViewModel.vmRecyclerViewCount.observe(viewLifecycleOwner, Observer {
+            binding.mypageRecyclerViewCount.text = "총 ${it}건"
         })
     }
 

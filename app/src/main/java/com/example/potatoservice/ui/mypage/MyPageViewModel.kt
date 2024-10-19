@@ -37,6 +37,10 @@ class MyPageViewModel(private val context: Context, private val myPageModel: MyP
     private val vmSpinnerItems: Array<String> = myPageModel.spinnerItems
     var vmSpinnerAdapter: ArrayAdapter<String>
 
+    //리사이클러뷰 count
+    private val _vmRecyclerViewCount = MutableLiveData<Int>()
+    val vmRecyclerViewCount: LiveData<Int> get() = _vmRecyclerViewCount
+
 
     init {
         vmSpinnerAdapter = ArrayAdapter(context, R.layout.spinner_item, vmSpinnerItems)
@@ -47,6 +51,9 @@ class MyPageViewModel(private val context: Context, private val myPageModel: MyP
         }
         myPageModel.volunteerCount.observeForever {
             _vmVolunteerCount.value = it
+        }
+        myPageModel.recyclerViewCount.observeForever {
+            _vmRecyclerViewCount.value = it
         }
     }
 
@@ -66,6 +73,10 @@ class MyPageViewModel(private val context: Context, private val myPageModel: MyP
 
     fun setVolunteerCount(){
         myPageModel.setVolunteerCount()
+    }
+
+    fun setRecyclerViewCount(){
+        myPageModel.setRecyclerViewCount()
     }
 
 }
