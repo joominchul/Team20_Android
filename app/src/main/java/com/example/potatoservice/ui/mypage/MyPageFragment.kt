@@ -5,12 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.potatoservice.R
 import com.example.potatoservice.databinding.FragmentMypageBinding
 import com.example.potatoservice.ui.share.Volunteer
 
@@ -35,7 +33,7 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         val factory = MyPageViewModelFactory(requireContext(), myPageModel)
         myPageViewModel = ViewModelProvider(this, factory).get(MyPageViewModel::class.java)
         binding = FragmentMypageBinding.inflate(inflater, container, false)
-        binding.myPageSpinner.adapter = myPageViewModel.vmAdapter
+        binding.myPageSpinner.adapter = myPageViewModel.vmSpinnerAdapter
         dialogArray = myPageViewModel.vmDialogArray
 
         return binding.root

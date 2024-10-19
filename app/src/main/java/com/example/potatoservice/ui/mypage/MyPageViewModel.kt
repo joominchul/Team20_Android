@@ -2,10 +2,8 @@ package com.example.potatoservice.ui.mypage
 
 import android.content.Context
 import android.widget.ArrayAdapter
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.example.potatoservice.R
 
@@ -24,11 +22,11 @@ class MyPageViewModel(private val context: Context, private val myPageModel: MyP
 
     private val vmSpinnerItems: Array<String> = myPageModel.spinnerItems
 
-    lateinit var vmAdapter: ArrayAdapter<String>
+    lateinit var vmSpinnerAdapter: ArrayAdapter<String>
 
     init {
-        vmAdapter = ArrayAdapter(context, R.layout.item_spinner, vmSpinnerItems)
-        vmAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
+        vmSpinnerAdapter = ArrayAdapter(context, R.layout.spinner_item, vmSpinnerItems)
+        vmSpinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
         myPageModel.volunteerHousr.observeForever {
             _vmVolunteerHours.value = it
             calculateEx(it)
