@@ -46,7 +46,6 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         myPageViewModel.setVolunteerCount()
         myPageViewModel.setRecyclerViewCount()
         setUpInit()
-
     }
 
     private fun setUpInit(){
