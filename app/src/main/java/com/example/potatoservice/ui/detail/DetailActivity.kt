@@ -67,6 +67,10 @@ class DetailActivity : AppCompatActivity() {
 		binding.buttonCurrentLocation.setOnClickListener {
 			moveToCurrentLocation()
 		}
+		//닫기 버튼
+		binding.detailClose.setOnClickListener {
+			finish()
+		}
 		showLoading()
 	}
 	//받아온 id로 봉사 활동 데이터 얻음
@@ -102,11 +106,11 @@ class DetailActivity : AppCompatActivity() {
 	private fun setMapView(){
 		mapView = binding.detailMapView
 		fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-		mapView.setOnTouchListener { v, event ->
-			v.parent.requestDisallowInterceptTouchEvent(true)
-			Log.d("seyoung","setOnTouchListener")
-			false
-		}
+//		mapView.setOnTouchListener { v, event ->
+//			v.parent.requestDisallowInterceptTouchEvent(true)
+//			Log.d("seyoung","setOnTouchListener")
+//			false
+//		}
 		mapView.start(object : MapLifeCycleCallback() {
 			override fun onMapDestroy() {
 			}

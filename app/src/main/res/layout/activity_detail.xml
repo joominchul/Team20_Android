@@ -25,7 +25,7 @@
         <ScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/base_gray">
 
+<!--                봉사내용-->
                 <include
                     android:id="@+id/activity_detail_item"
                     layout="@layout/activity_detail_item"
@@ -45,6 +46,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:viewmodel="@{viewmodel}" />
 
+<!--                봉사 리뷰-->
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
@@ -149,6 +151,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
+<!--                봉사활동위치-->
                 <TextView
                     android:id="@+id/volunteer_address"
                     android:layout_width="wrap_content"
@@ -161,6 +164,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
+<!--                지도, 현재위치-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/detail_map_layout"
                     android:layout_width="match_parent"
@@ -170,7 +174,7 @@
                     <com.kakao.vectormap.MapView
                         android:id="@+id/detail_map_view"
                         android:layout_width="match_parent"
-                        android:layout_height="500dp"
+                        android:layout_height="600dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -180,51 +184,22 @@
                         android:id="@+id/button_current_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="80dp"
                         android:background="@drawable/ic_map_location_button_background"
                         android:padding="10dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_map_current_location"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
+                        app:layout_constraintBottom_toBottomOf="@id/detail_map_view"
+                        app:layout_constraintEnd_toEndOf="@id/detail_map_view" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@color/point_green"
-                    app:layout_constraintBottom_toBottomOf="@id/detail_map_layout">
-
-                </LinearLayout>
-
-
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/loading_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/loading_grey"
-                        android:gravity="center_horizontal|center_vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loading"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-                </com.facebook.shimmer.ShimmerFrameLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </ScrollView>
 
+        <!-- 신청하기 전화로 문의하기            -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
@@ -259,15 +234,39 @@
                 app:layout_constraintStart_toEndOf="@+id/guideline" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- 닫기 버튼        -->
         <ImageView
             android:id="@+id/detail_close"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/ic_close"
+            android:src="@drawable/ic_close"
             android:layout_gravity="top|end"/>
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/loading_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/loading_grey"
+                android:gravity="center_horizontal|center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
     </FrameLayout>
 
 
