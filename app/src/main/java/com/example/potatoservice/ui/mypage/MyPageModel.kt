@@ -52,9 +52,14 @@ class MyPageModel(context : Context) {
 
     //봉사 시간 데이터
     val volunteerHousr = MutableLiveData<Int>()
+    val volunteerCount = MutableLiveData<Int>()
 
     fun setVolunteerHours(){
-        volunteerHousr.value = 127
+        volunteerHousr.value = 199
+    }
+
+    fun setVolunteerCount(){
+        volunteerCount.value = 190
     }
 
 
