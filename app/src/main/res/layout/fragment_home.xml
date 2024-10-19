@@ -65,30 +65,31 @@
 
                 <Spinner
                     android:id="@+id/sort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="110dp"
+                    android:layout_height="45dp"
+                    android:popupBackground="@color/base_beige_1"/>
                 <Spinner
                     android:id="@+id/major_regional_categories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="120dp"
+                    android:layout_height="45dp"
                     android:popupBackground="@color/base_beige_1"/>
 
                 <Spinner
                     android:id="@+id/minor_regional_categories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="120dp"
+                    android:layout_height="45dp"
                     android:popupBackground="@color/base_beige_1"/>
 
                 <Spinner
                     android:id="@+id/volunteer_activities_categories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="110dp"
+                    android:layout_height="45dp"
                     android:popupBackground="@color/base_beige_1"/>
 
                 <Spinner
                     android:id="@+id/age_categories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="110dp"
+                    android:layout_height="45dp"/>
             </LinearLayout>
         </HorizontalScrollView>
 
