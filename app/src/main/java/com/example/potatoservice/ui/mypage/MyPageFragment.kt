@@ -5,12 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.potatoservice.R
 import com.example.potatoservice.databinding.FragmentMypageBinding
 import com.example.potatoservice.ui.share.Volunteer
 
@@ -35,7 +33,7 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         val factory = MyPageViewModelFactory(requireContext(), myPageModel)
         myPageViewModel = ViewModelProvider(this, factory).get(MyPageViewModel::class.java)
         binding = FragmentMypageBinding.inflate(inflater, container, false)
-        binding.myPageSpinner.adapter = myPageViewModel.vmAdapter
+        binding.myPageSpinner.adapter = myPageViewModel.vmSpinnerAdapter
         dialogArray = myPageViewModel.vmDialogArray
 
         return binding.root
@@ -44,9 +42,10 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myPageViewModel.setVoulunteerHours()
+        myPageViewModel.setVolunteerHours()
+        myPageViewModel.setVolunteerCount()
+        myPageViewModel.setRecyclerViewCount()
         setUpInit()
-
     }
 
     private fun setUpInit(){
@@ -54,6 +53,8 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         setupRecyclerView()
         setupTvLevel()
         setupTvTotalHours()
+        setupTvTotalCount()
+        setupRecyclerViewCount()
     }
 
     // ProgressBar 설정 함수
@@ -62,18 +63,35 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         myPageViewModel.progress.observe(viewLifecycleOwner) { progress ->
             binding.progressBar.progress = progress
         }
+        myPageViewModel.progressPercent.observe(viewLifecycleOwner){
+            binding.tvProgressPercent.text = "${it}%"
+        }
     }
 
+    //총 봉사 건수 설정
+    private fun setupTvTotalCount(){
+        myPageViewModel.vmVolunteerCount.observe(viewLifecycleOwner, Observer {
+            binding.tvTotalVolunteerCount.text = "총 봉사 건수 : ${it} 건"
+        })
+    }
+
+    //총 봉사 시간 설정
     private fun setupTvTotalHours(){
         myPageViewModel.vmVolunteerHours.observe(viewLifecycleOwner, Observer {
             binding.tvTotalHours.text = "총 봉사 시간 : ${it}"
         })
     }
 
-    // Lv 설정 함수
+    // 레벨 설정
     private fun setupTvLevel(){
         myPageViewModel.vmLevel.observe(viewLifecycleOwner, Observer {
             binding.tvLevel.text = "Lv. ${it}"
+        })
+    }
+
+    private fun setupRecyclerViewCount(){
+        myPageViewModel.vmRecyclerViewCount.observe(viewLifecycleOwner, Observer {
+            binding.mypageRecyclerViewCount.text = "총 ${it}건"
         })
     }
 
