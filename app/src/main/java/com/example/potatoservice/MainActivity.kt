@@ -1,6 +1,7 @@
 package com.example.potatoservice
 
 import android.os.Bundle
+import android.view.WindowManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -33,7 +34,8 @@ class MainActivity : AppCompatActivity() {
 				R.id.navigation_home, R.id.navigation_map, R.id.navigation_mypage
 			)
 		)
-		setupActionBarWithNavController(navController, appBarConfiguration)
+//		setupActionBarWithNavController(navController, appBarConfiguration)
 		navView.setupWithNavController(navController)
+		navView.itemIconTintList = null
 	}
 }
