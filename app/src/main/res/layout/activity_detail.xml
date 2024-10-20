@@ -26,13 +26,15 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/base_white"
             android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/base_gray">
+                android:layout_margin="5dp"
+                android:background="@color/base_white">
 
 <!--                봉사내용-->
                 <include
@@ -54,6 +56,7 @@
                     android:background="@drawable/bg_plain"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:layout_marginTop="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/activity_detail_item">
@@ -169,6 +172,7 @@
                     android:id="@+id/detail_map_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintTop_toBottomOf="@+id/volunteer_address">
 
                     <com.kakao.vectormap.MapView
@@ -218,7 +222,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_plain"
                 android:text="@string/request"
+                android:textColor="@color/point_brown_2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -228,7 +234,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_plain"
                 android:text="@string/call"
+                android:textColor="@color/point_brown_2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/guideline" />
