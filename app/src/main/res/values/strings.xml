@@ -17,7 +17,7 @@
     <string name="error_unknown">알 수 없는 오류</string>
 
     <!-- HomeFragment -->
-    <string name="closed_volunteer_look">마감된 봉사 보기</string>
+    <string name="closed_volunteer_look">마감된 봉사 포함</string>
     <string name="detail">상세 보기</string>
     <string name="review1">고지된 업무 내용이 실제와 일치하였나요?</string>
     <string name="review2">담당자는 친절하였나요?</string>

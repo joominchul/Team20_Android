@@ -119,15 +119,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30sp"
                 android:textColor="#424242"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/switch_button"
                 android:text="@string/closed_volunteer_look"
                 android:textSize="20sp" />
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_button"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
