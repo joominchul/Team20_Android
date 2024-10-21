@@ -1,0 +1,23 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 기본 배경 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" /> <!-- 배경 색상 -->
+            <stroke android:width="1dp" android:color="@color/point_green" /> <!-- 테두리 색상 -->
+        </shape>
+    </item>
+
+    <!-- 화살표 부분 -->
+    <item android:gravity="end|center_vertical">
+        <vector
+            android:width="40dp"
+            android:height="40dp"
+            android:viewportWidth="960"
+            android:viewportHeight="960"
+            android:tint="@color/point_brown_2">
+            <path
+                android:fillColor="@color/point_brown_2"
+                android:pathData="M480,600L280,400.67L680,400.67L480,600Z"/>
+        </vector>
+    </item>
+</layer-list>

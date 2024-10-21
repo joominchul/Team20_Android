@@ -16,27 +16,17 @@
         android:layout_margin="2dp"
         android:background="@drawable/bg_item_volunteer">
 
-        <ImageView
-            android:id="@+id/service_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/magnifier"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/service_image"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_margin="20dp">
             <TextView
                 android:id="@+id/service_title"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{detail.actTitle}"
                 android:textSize="20sp"
@@ -44,80 +34,80 @@
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/service_location"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/봉사장소(detail.actLocation)}"
                 android:textColor="#424242"/>
             <TextView
                 android:id="@+id/service_description"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/봉사설명(detail.description)}"
                 android:textColor="#424242"/>
             <TextView
                 android:id="@+id/service_organization_service_category"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{detail.category}"
+                android:text="@{@string/카테고리(detail.category)}"
                 android:textColor="#424242"
                 />
             <TextView
                 android:id="@+id/service_recruit_total_number"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/모집인원(detail.recruitTotalNum)}"
                 android:textColor="#424242"
                 />
             <TextView
                 android:id="@+id/service_age_possible"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/가능연령(viewmodel.agePossible)}"
                 android:textColor="#424242"
                 />
             <TextView
                 android:id="@+id/service_group_possible"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/단체봉사(viewmodel.groupPossible)}"
                 android:textColor="#424242"
                 />
             <TextView
                 android:id="@+id/service_notice_date"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#424242"
                 android:text="@{@string/공지날짜(detail.noticeStartDate, detail.noticeEndDate)}"
                 />
             <TextView
                 android:id="@+id/service_act_date"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/활동날짜(detail.actStartDate, detail.actEndDate)}"
                 android:textColor="#424242"/>
             <TextView
                 android:id="@+id/service_act_time"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/활동시간(detail.actStartTime, detail.actEndTime)}"
                 android:textColor="#424242"/>
             <TextView
                 android:id="@+id/service_manager"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/담당직원(detail.actManager)}"
                 android:textColor="#424242"
                 />
             <TextView
                 android:id="@+id/service_phone"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/전화번호(detail.actPhone)}"
                 android:textColor="#424242"
                 />
             <TextView
                 android:id="@+id/service_url"
-                android:layout_width="245dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/url(detail.url)}"
                 android:textColor="#424242"

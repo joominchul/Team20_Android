@@ -6,5 +6,5 @@
     android:text="테스트"
     android:textColor="@color/point_brown_2"
     android:textSize="15sp"
-    android:textStyle="normal" />
+    android:textStyle="normal"/>
 

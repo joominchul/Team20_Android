@@ -81,4 +81,6 @@ dependencies {
 	implementation("com.google.dagger:hilt-android:2.48.1")
 	kapt("com.google.dagger:hilt-compiler:2.48.1")
 	implementation("androidx.fragment:fragment-ktx:1.6.1")
+	//Shimmer 로딩 라이브러리
+	implementation ("com.facebook.shimmer:shimmer:0.5.0")
 }

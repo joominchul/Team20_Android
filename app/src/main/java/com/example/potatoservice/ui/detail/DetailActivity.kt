@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -58,12 +60,18 @@ class DetailActivity : AppCompatActivity() {
 			val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
 			startActivity(intent)
 		}
+
 		//지도 기능들
 		setMapView()
 		//지도 현위치 버튼
 		binding.buttonCurrentLocation.setOnClickListener {
 			moveToCurrentLocation()
 		}
+		//닫기 버튼
+		binding.detailClose.setOnClickListener {
+			finish()
+		}
+		showLoading()
 	}
 	//받아온 id로 봉사 활동 데이터 얻음
 	private fun getActivity(id: Int){
@@ -98,6 +106,11 @@ class DetailActivity : AppCompatActivity() {
 	private fun setMapView(){
 		mapView = binding.detailMapView
 		fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+//		mapView.setOnTouchListener { v, event ->
+//			v.parent.requestDisallowInterceptTouchEvent(true)
+//			Log.d("seyoung","setOnTouchListener")
+//			false
+//		}
 		mapView.start(object : MapLifeCycleCallback() {
 			override fun onMapDestroy() {
 			}
@@ -165,5 +178,20 @@ class DetailActivity : AppCompatActivity() {
 			val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
 			kakaoMap.moveCamera(cameraUpdate)
 		}
+	}
+	//로딩 화면 설정
+	private fun showLoading(){
+		viewModel.loading.observe(this, Observer {loading->
+			if (loading){
+				binding.main.visibility = View.GONE
+				binding.loadingLayout.visibility = View.VISIBLE
+				binding.loadingLayout.startShimmer()
+			}else{
+				binding.loadingLayout.stopShimmer()
+				binding.loadingLayout.visibility = View.GONE
+				binding.main.visibility = View.VISIBLE
+			}
+		})
+
 	}
 }

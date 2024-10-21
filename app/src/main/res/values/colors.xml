@@ -8,15 +8,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_blue_grey">#B7C9E2</color>
-    <color name="dark_grey">#363737</color>
+    <color name="dark_gray">#363737</color>
 
     <color name="base_white">#FAF8F5</color>
-    <color name="base_grey">#C6C6C6</color>
+    <color name="base_gray">#C6C6C6</color>
     <color name="base_beige_1">#F0E4D7</color>
     <color name="base_beige_2">#E8BE8C</color>
     <color name="point_brown_1">#BC7B4F</color>
     <color name="point_brown_2">#4C220E</color>
     <color name="point_green">#0CC850</color>
 
+    <color name="loading_grey">#FFaaaaaa</color>
 
 </resources>

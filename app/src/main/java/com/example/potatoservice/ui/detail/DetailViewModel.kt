@@ -55,4 +55,6 @@ class DetailViewModel @Inject constructor(
 		}
 	}
 
+	val loading = repository.loading
+
 }
