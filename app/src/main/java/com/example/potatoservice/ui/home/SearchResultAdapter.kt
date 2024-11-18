@@ -12,6 +12,7 @@ import com.example.potatoservice.databinding.LoadingItemBinding
 import com.example.potatoservice.databinding.ServiceItemBinding
 import com.example.potatoservice.model.remote.Activity
 import com.example.potatoservice.ui.share.AdapterCallback
+import kotlin.math.abs
 
 class SearchResultAdapter(
 	private val callback: AdapterCallback
@@ -79,6 +80,8 @@ class SearchResultAdapter(
 	private var recyclerViewState: Parcelable? = null
 	//서버에서 가져온 정보를 포함한 실제 아이템 개수
 	private var nowItemCount = 0
+	//직전 포지션
+	private var previousPosition:Int? = null
 
 	// 로딩 표시기 추가
 	override fun getItemViewType(position: Int): Int {
@@ -102,9 +105,23 @@ class SearchResultAdapter(
 			override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 				super.onScrolled(recyclerView, dx, dy)
 				val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+				//현재 포지션
 				val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-				//지금 보고 있는 아이템 포지션이 맨 마지막이고, 로딩 중이 아니면서 아이템 개수가 실제 아이템 개수보다 같거나 클 경우
-				if (lastVisibleItemPosition == itemCount - 1 && !isLoading && itemCount >= nowItemCount) {
+				//맨 처음에는 이전 포지션을 현재 포지션으로 저장
+				if (previousPosition == null){
+					previousPosition = lastVisibleItemPosition
+				}
+				val positionGap = abs(previousPosition!! - lastVisibleItemPosition)
+				Log.d("testt", "$previousPosition - $lastVisibleItemPosition = $positionGap")
+				//포지션 갭이 1보다 큰 경우 오류 현상임.
+				if (positionGap>1){
+					layoutManager.scrollToPosition(0)
+				}
+				else{
+					previousPosition = lastVisibleItemPosition
+				}
+				//지금 보고 있는 아이템 포지션이 맨 마지막이고, 로딩 중이 아니면서 아이템 개수가 실제 아이템 개수보다 같거나 크고, 이전 포지션과 현재 포지션이 이어지는 경우
+				if (lastVisibleItemPosition == itemCount - 1 && !isLoading && itemCount >= nowItemCount && positionGap <= 1) {
 					//현재 위치 저장
 					recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
 					// 더 많은 아이템 로드

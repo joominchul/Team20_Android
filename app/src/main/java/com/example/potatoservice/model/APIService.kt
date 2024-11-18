@@ -5,6 +5,7 @@ import com.example.potatoservice.model.remote.ActivityResponse
 import com.example.potatoservice.model.remote.AddressResponse
 import com.example.potatoservice.model.remote.LoginRequest
 import com.example.potatoservice.model.remote.MarkerData
+import com.example.potatoservice.model.remote.Review
 import com.example.potatoservice.model.remote.SendSignUpUserInfo
 import com.example.potatoservice.model.remote.SidoGungu
 import com.example.potatoservice.model.remote.VolunteerHistoryResponse
@@ -83,6 +84,18 @@ interface APIService {
     fun getHistory(
         @Header("Authorization") jwtToken: String
     ) : Call<VolunteerHistoryResponse>
+
+    //리뷰 내용 받아오기
+    @GET("/api/v1/reviews/questions")
+    fun getReview(): Call<List<Review>>
+
+    //개인 봉사 내역 추가하기
+    @POST("/api/v1/histories")
+    fun addHistory(
+        @Header("Authorization") jwtToken: String,
+        @Body actId : Int
+    ): Call<Void>
+
 
 
     // 지도 맵 마커 -> 삭제

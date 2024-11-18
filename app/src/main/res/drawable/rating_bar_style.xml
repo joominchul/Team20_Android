@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 안 채워진 별 (배경은 투명하고 회색) -->
+    <item android:id="@android:id/background">
+        <shape>
+            <solid android:color="@android:color/darker_gray"/> <!-- 회색 -->
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+
+    <!-- 채워진 별 -->
+    <item android:id="@android:id/secondaryProgress">
+        <shape>
+            <solid android:color="@android:color/darker_gray"/> <!-- 회색 -->
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+
+    <!-- 현재 채워진 별 (노란색) -->
+    <item android:id="@android:id/progress">
+        <shape>
+            <solid android:color="#FFEB3B"/> <!-- 노란색 -->
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+</layer-list>

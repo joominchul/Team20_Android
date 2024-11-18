@@ -11,7 +11,6 @@ import com.example.potatoservice.ui.share.Volunteer
 
 class MyPageViewModel(private val context: Context) : ViewModel(), OnVolunteerClickListener {
 
-
     //닉네임
     private val _vmNickname = MutableLiveData<String>()
     val vmNickname: LiveData<String> get() = _vmNickname
@@ -23,6 +22,7 @@ class MyPageViewModel(private val context: Context) : ViewModel(), OnVolunteerCl
     //봉사 건수
     private val _vmVolunteerCount = MutableLiveData<Int>()
     val vmVolunteerCount: LiveData<Int> get() = _vmVolunteerCount
+
 
     //경험치바 값
     private val _progress = MutableLiveData<Int>()
@@ -36,10 +36,6 @@ class MyPageViewModel(private val context: Context) : ViewModel(), OnVolunteerCl
     private val _vmLevel = MutableLiveData<Int>()
     val vmLevel: MutableLiveData<Int> get() = _vmLevel
 
-    //다이얼로그
-    private val _vmDialogArray: Array<DialogModel> = MyPageModel.dialogArray
-    val vmDialogArray: Array<DialogModel> get() = _vmDialogArray
-
     //스피너
     private val vmSpinnerItems: Array<String> = MyPageModel.spinnerItems
     var vmSpinnerAdapter: ArrayAdapter<String>
@@ -48,32 +44,14 @@ class MyPageViewModel(private val context: Context) : ViewModel(), OnVolunteerCl
     private val _vmRecyclerViewCount = MutableLiveData<Int>()
     val vmRecyclerViewCount: LiveData<Int> get() = _vmRecyclerViewCount
 
-    // 다이얼로그 표시 횟수
-    private val _dialogShowCount = MutableLiveData<Int>(0)
-    val dialogShowCount: LiveData<Int> get() = _dialogShowCount
-
-    // 긍정 응답 횟수
-    private val _positiveCount = MutableLiveData<Int>(0)
-    val positiveCount: LiveData<Int> get() = _positiveCount
-
-    // 부정 응답 횟수
-    private val _negativeCount = MutableLiveData<Int>(0)
-    val negativeCount: LiveData<Int> get() = _negativeCount
-
-    // 현재 다이얼로그 모델
-    private val _currentDialogModel = MutableLiveData<DialogModel?>()
-    val currentDialogModel: LiveData<DialogModel?> get() = _currentDialogModel
-
-    // 다이얼로그 최대 표시 횟수
-    private val maxDialogCount = 5
-
-    // 초기화 시점에 다이얼로그 배열 로드
-    private val dialogArray: Array<DialogModel> = MyPageModel.dialogArray
 
     //리사이클러뷰 어댑터
     val vmVolunteerAdapter: VolunteerAdapter = VolunteerAdapter(
         MyPageModel.volunteerHistoryList.value ?: emptyList(), this
     )
+
+    val vmReviewDialog = MutableLiveData<List<DialogModel>>()
+
 
 
     //초기 설정
@@ -109,9 +87,12 @@ class MyPageViewModel(private val context: Context) : ViewModel(), OnVolunteerCl
             vmVolunteerAdapter.setVolunteerList(it)
         }
 
+        //리뷰 다이얼로그 질문 내용 리스트
+        MyPageModel.dialogModels.observeForever {
+            vmReviewDialog.value = it
+        }
 
     }
-
 
 
     //봉사시간에 따라 레벨과 경험치 값 조정
@@ -125,33 +106,11 @@ class MyPageViewModel(private val context: Context) : ViewModel(), OnVolunteerCl
         _progressPercent.value = progressValue
     }
 
-
-    // 다이얼로그 표시 상태 업데이트
-    fun showNextDialog() {
-        val currentCount = _dialogShowCount.value ?: 0
-        if (currentCount < maxDialogCount) {
-            _currentDialogModel.value = dialogArray[currentCount] // 현재 다이얼로그 모델 설정
-            _dialogShowCount.value = currentCount + 1 // 표시 횟수 증가
-        } else {
-            _currentDialogModel.value = null // 더 이상 다이얼로그 없음
-        }
-    }
-
-    // 긍정 버튼 클릭 시 호출되는 함수
-    fun onPositiveButtonClick() {
-        _positiveCount.value = (_positiveCount.value ?: 0) + 1
-        showNextDialog() // 다음 다이얼로그 표시
-    }
-
-    // 부정 버튼 클릭 시 호출되는 함수
-    fun onNegativeButtonClick() {
-        _negativeCount.value = (_negativeCount.value ?: 0) + 1
-        showNextDialog() // 다음 다이얼로그 표시
-    }
-
     override fun onVolunteerClick(volunteer: Volunteer) {
-        showNextDialog() // 다이얼로그 표시 요청
+        MyPageModel.getReviewQuestions()
     }
+
+
 
 //=======
 

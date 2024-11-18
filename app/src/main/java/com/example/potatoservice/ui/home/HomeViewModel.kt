@@ -1,6 +1,7 @@
 package com.example.potatoservice.ui.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.potatoservice.model.remote.SidoGungu
@@ -55,6 +56,8 @@ class HomeViewModel @Inject constructor(
             }
             gunguCodeMap[sidoCode]?.add(listOf(gunguName!!, gunguCode))
         }
+        //세종시 추가
+        gunguCodeMap[5690000] = mutableListOf(listOf("지역 소분류", 0))
         return gunguCodeMap
     }
 

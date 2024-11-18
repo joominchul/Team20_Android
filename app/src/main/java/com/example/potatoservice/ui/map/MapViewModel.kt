@@ -4,28 +4,33 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.potatoservice.R
+import com.example.potatoservice.model.KakaoRetrofitClient
+import com.example.potatoservice.model.RetrofitClient
+import com.example.potatoservice.model.remote.Activity
+import com.example.potatoservice.model.remote.AddressResponse
 import com.example.potatoservice.model.remote.MarkerData
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-import androidx.lifecycle.viewModelScope
-import com.example.potatoservice.model.KakaoRetrofitClient
-import com.example.potatoservice.model.RetrofitClient
-import com.example.potatoservice.model.remote.AddressResponse
-import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelTextStyle
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import retrofit2.Call
 import retrofit2.Callback
-
+import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class MapViewModel : ViewModel() {
+
     private val _cameraPosition = MutableLiveData<LatLng>()
     private val _zoomLevel = MutableLiveData<Int>()
 
@@ -41,31 +46,40 @@ class MapViewModel : ViewModel() {
         return Triple(lat, lon, zoom)
     }
 
-
-
-
-
-
-
-
-
-    private val _markerDataList = MutableLiveData<List<MarkerData>>(listOf(MarkerData(37.870448, 127.746190, "test", "address", "설명", "기관", "모집기간", "모집인원", "활동 시간","활동 기간")))
+    private val _markerDataList = MutableLiveData<List<MarkerData>>(listOf())
     val markerDataList: LiveData<List<MarkerData>> get() = _markerDataList
+
+    fun clearMarkerDataList() {
+        _markerDataList.value = listOf()
+    }
+
+    fun addMarkerData(lat: Double, lng: Double, title: String, address: String) {
+        val currentList = _markerDataList.value.orEmpty().toMutableList()
+        val newMarker = MarkerData(
+            lat = lat,
+            lng = lng,
+            title = title,
+            address = address,
+            description = "설명",
+            organization = "기관",
+            recruitmentPeriod = "모집기간",
+            recruitmentCount = "모집인원",
+            activityTime = "활동 시간",
+            activityPeriod = "활동 기간"
+        )
+        currentList.add(newMarker)
+        _markerDataList.value = currentList
+    }
+
     private val _selectedMarker = MutableLiveData<MarkerData?>()
     val selectedMarker: LiveData<MarkerData?> get() = _selectedMarker
 
-    // 서버에서 마커 데이터를 가져와 LiveData에 저장
     fun setMarkerData() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = RetrofitClient.apiService().getMarkers()
-
             response.enqueue(object : Callback<List<MarkerData>> {
-                override fun onResponse(
-                    call: Call<List<MarkerData>>,
-                    response: Response<List<MarkerData>>
-                ) {
+                override fun onResponse(call: Call<List<MarkerData>>, response: Response<List<MarkerData>>) {
                     if (response.isSuccessful) {
-                        // 서버에서 받은 데이터를 LiveData에 저장
                         _markerDataList.postValue(response.body())
                         Log.d("testt", "Markers fetched successfully: ${response.body()}")
                     } else {
@@ -74,25 +88,23 @@ class MapViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<List<MarkerData>>, t: Throwable) {
-                    // 에러 처리
                     Log.e("testt", "Failed to fetch markers", t)
                 }
             })
         }
     }
 
-    // 특정 마커를 선택하여 CardView 데이터 업데이트
     fun selectMarker(markerData: MarkerData) {
         _selectedMarker.value = markerData
     }
 
-    // Clear selected marker
     fun clearSelectedMarker() {
         _selectedMarker.value = null
     }
 
-    // 지도에 라벨 추가
     fun addMarkersToMap(kakaoMap: KakaoMap) {
+        kakaoMap.labelManager?.removeAllLabelLayer()
+
         val markerDataList = _markerDataList.value ?: return
 
         for (markerData in markerDataList) {
@@ -100,11 +112,9 @@ class MapViewModel : ViewModel() {
             val styles = LabelStyles.from(LabelStyle.from(R.drawable.ic_map_marker).setZoomLevel(5))
             val labelOptions = LabelOptions.from(latLng).setStyles(styles)
             val label = kakaoMap.labelManager!!.layer!!.addLabel(labelOptions)
-            Log.d("testt", "Marker added at: ${latLng.latitude}, ${latLng.longitude}")
             label.tag = markerData
         }
 
-        // 라벨 클릭 리스너 설정
         kakaoMap.setOnLabelClickListener(object : KakaoMap.OnLabelClickListener {
             override fun onLabelClicked(kakaoMap: KakaoMap, layer: LabelLayer, clickedLabel: com.kakao.vectormap.label.Label) {
                 val markerData = clickedLabel.tag as? MarkerData
@@ -114,65 +124,71 @@ class MapViewModel : ViewModel() {
             }
         })
     }
-    // 지도에 기관 마커 추가
+    //상세 페이지 지도 크게 보기를 통한 기관 마커 생성
     fun addInstituteMarker(kakaoMap: KakaoMap, latLng: LatLng, instituteName: String) {
-        val style = LabelStyle.from(R.drawable.ic_map_marker_institute).setZoomLevel(5).setTextStyles(LabelTextStyle.from(40, R.color.point_brown_2))
+        val style = LabelStyle.from(R.drawable.ic_map_marker_institute).setZoomLevel(5)
+            .setTextStyles(LabelTextStyle.from(40, R.color.point_brown_2))
         val labelOptions = LabelOptions.from(latLng).setStyles(style).setTexts(instituteName)
         kakaoMap.labelManager!!.layer!!.addLabel(labelOptions)
     }
-    // 기관 위치로 이동
+    //상세 페이지 지도 크게 보기를 통한 기관 위치로 이동
     fun moveInstitute(kakaoMap: KakaoMap, latLng: LatLng) {
         val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
         kakaoMap.moveCamera(cameraUpdate)
-
     }
 
-
-
-
-
-
-    /* 주소를 좌표로 변환
-    * 레트로핏을 사용, 스프링 서버로 부터 actLocation 을 받으면 카카오 주소 검색 API 사용하여 좌표를 받습니다.
-     */
-    private val _coordinates = MutableLiveData<Pair<Double, Double>?>()
-    val coordinates: LiveData<Pair<Double, Double>?> get() = _coordinates
-    fun fetchCoordinates(address: String) {
-        val apiKey = "KakaoAK aa23edc0dd8f4cc31ed3c9245040e78d"  // Kakao REST API 키를 설정하세요
-        val apiService = KakaoRetrofitClient.apiService()  // Retrofit을 통해 API 서비스 호출
-
-        apiService.searchAddress(apiKey, address).enqueue(object : Callback<AddressResponse> {
-            override fun onResponse(call: Call<AddressResponse>, response: Response<AddressResponse>) {
-                if (response.isSuccessful) {
-                    val documents = response.body()?.documents
-                    if (!documents.isNullOrEmpty()) {
-                        val firstResult = documents[0]
-                        val longitude = firstResult.x.toDoubleOrNull()
-                        val latitude = firstResult.y.toDoubleOrNull()
-                        if (longitude != null && latitude != null) {
-                            _coordinates.postValue(Pair(latitude, longitude))
-                            Log.d("testt", "주소 변환 성공: $latitude, $longitude")
-                        } else {
-                            Log.e("testt", "좌표 변환 실패: 좌표 값이 null입니다.")
-                        }
-                    } else {
-                        Log.e("testt", "검색 결과 없음")
-                        _coordinates.postValue(null)
-                    }
-                } else {
-                    Log.e("testt", "API 응답 실패: ${response.message()}")
-                    _coordinates.postValue(null)
+    fun fetchCoordinatesList(activities: List<Activity>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val deferredCoordinates = activities.map { activity ->
+                async {
+                    fetchCoordinates(activity)
                 }
             }
 
-            override fun onFailure(call: Call<AddressResponse>, t: Throwable) {
-                Log.e("testt", "API 요청 실패", t)
-                _coordinates.postValue(null)
-            }
-        })
+            val results = deferredCoordinates.awaitAll().filterNotNull()
+            _markerDataList.postValue(results)
+        }
     }
 
+    private suspend fun fetchCoordinates(activity: Activity): MarkerData? {
+        val apiKey = "KakaoAK aa23edc0dd8f4cc31ed3c9245040e78d"
+        val apiService = KakaoRetrofitClient.apiService()
 
+        return suspendCoroutine { continuation ->
+            apiService.searchAddress(apiKey, activity.actLocation.toString()).enqueue(object : Callback<AddressResponse> {
+                override fun onResponse(call: Call<AddressResponse>, response: Response<AddressResponse>) {
+                    if (response.isSuccessful) {
+                        val documents = response.body()?.documents
+                        if (!documents.isNullOrEmpty()) {
+                            val firstResult = documents[0]
+                            val lat = firstResult.y.toDoubleOrNull()
+                            val lng = firstResult.x.toDoubleOrNull()
+                            continuation.resume(
+                                MarkerData(
+                                    lat = lat ?: 0.0,
+                                    lng = lng ?: 0.0,
+                                    title = activity.actTitle.toString(),
+                                    address = activity.actLocation.toString(),
+                                    description = "활동 설명: ${activity.category}",
+                                    organization = "",
+                                    recruitmentPeriod = "${activity.noticeStartDate} ~ ${activity.noticeEndDate}",
+                                    recruitmentCount = "${activity.recruitTotalNum}",
+                                    activityTime = "${activity.actStartTime} ~ ${activity.actEndTime}",
+                                    activityPeriod = "${activity.actStartDate} ~ ${activity.actEndDate}"
+                                )
+                            )
+                        } else {
+                            continuation.resume(null)
+                        }
+                    } else {
+                        continuation.resume(null)
+                    }
+                }
 
-
+                override fun onFailure(call: Call<AddressResponse>, t: Throwable) {
+                    continuation.resume(null)
+                }
+            })
+        }
+    }
 }

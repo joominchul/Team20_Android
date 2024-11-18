@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.potatoservice.R
 import com.example.potatoservice.model.RetrofitClient
 import com.example.potatoservice.model.remote.AvatarInfo
+import com.example.potatoservice.model.remote.Review
 import com.example.potatoservice.model.remote.VolunteerHistoryResponse
 import com.example.potatoservice.ui.share.Volunteer
 import retrofit2.Call
@@ -15,43 +16,44 @@ object MyPageModel {
 
     // DialogModel 배열을 생성
     // todo 서버로 부터 리뷰 질문 받기
-    val dialogArray = arrayOf(
-        DialogModel(
-            title = "리뷰 요청",
-            content = "테스트1",
-            imageBackground = R.drawable.ic_hotgamja_main_character,
-            positiveButtonText = "네",
-            negativeButtonText = "아니오"
-        ),
-        DialogModel(
-            title = "리뷰 요청",
-            content = "테스트2",
-            imageBackground = R.drawable.ic_interest_cultural_event,
-            positiveButtonText = "네",
-            negativeButtonText = "아니오"
-        ),
-        DialogModel(
-            title = "리뷰 요청",
-            content = "테스트3",
-            imageBackground = R.drawable.ic_interest_education,
-            positiveButtonText = "네",
-            negativeButtonText = "아니오"
-        ),
-        DialogModel(
-            title = "리뷰 요청",
-            content = "테스트4",
-            imageBackground = R.drawable.ic_interest_international_event,
-            positiveButtonText = "네",
-            negativeButtonText = "아니오"
-        ),
-        DialogModel(
-            title = "리뷰 요청",
-            content = "테스트5",
-            imageBackground = R.drawable.ic_interest_support,
-            positiveButtonText = "네",
-            negativeButtonText = "아니오"
-        )
-        )
+//    val dialogArray = arrayOf(
+//        DialogModel(
+//            title = "리뷰 요청",
+//            content = "테스트1",
+//            imageBackground = R.drawable.ic_hotgamja_main_character,
+//            previousButtonText = "네",
+//            nextButtonText = "아니오"
+//        ),
+//        DialogModel(
+//            title = "리뷰 요청",
+//            content = "테스트2",
+//            imageBackground = R.drawable.ic_interest_cultural_event,
+//            previousButtonText = "네",
+//            nextButtonText = "아니오"
+//        ),
+//        DialogModel(
+//            title = "리뷰 요청",
+//            content = "테스트3",
+//            imageBackground = R.drawable.ic_interest_education,
+//            previousButtonText = "네",
+//            nextButtonText = "아니오"
+//        ),
+//        DialogModel(
+//            title = "리뷰 요청",
+//            content = "테스트4",
+//            imageBackground = R.drawable.ic_interest_international_event,
+//            previousButtonText = "네",
+//            nextButtonText = "아니오"
+//        ),
+//        DialogModel(
+//            title = "리뷰 요청",
+//            content = "테스트5",
+//            imageBackground = R.drawable.ic_interest_support,
+//            previousButtonText = "네",
+//            nextButtonText = "아니오"
+//        )
+//        )
+    val dialogModels = MutableLiveData<List<DialogModel>>()
 
     //mypage 보기방식 spinner item
     val spinnerItems : Array<String> = arrayOf("전체보기", "신청완료", "확정 대기", "수행완료됨")
@@ -60,6 +62,8 @@ object MyPageModel {
     val volunteerHours = MutableLiveData<Int>()
     val volunteerCount = MutableLiveData<Int>()
     val ninkname = MutableLiveData<String>()
+
+
 
     //리사이클러뷰 count
     val recyclerViewCount = MutableLiveData<Int>()
@@ -114,11 +118,37 @@ object MyPageModel {
 
     }
 
+    //리뷰 질문 내용 서버로부터 받기
+    fun getReviewQuestions() {
+        RetrofitClient.apiService().getReview().enqueue(object : Callback<List<Review>> {
+            override fun onResponse(call: Call<List<Review>>, response: Response<List<Review>>) {
+                if (response.isSuccessful) {
+                    Log.d("seyoung", "MyPageModel에서 getReviewQuestions 성공 body :${response.body()}")
+                    response.body()?.let { questions ->
+                        val models = questions.map { question ->
+                            DialogModel(
+                                title = "Review",  // 기본 타이틀
+                                content = question.content,
+                                previousButtonText = "이전",
+                                nextButtonText = "다음"
+                            )
+                        }
+                        dialogModels.value = models
+                    }
+                }
+            }
 
-    fun setMyPageModel(userInfo: AvatarInfo){
-        volunteerHours.value = userInfo.avatarExp
+            override fun onFailure(call: Call<List<Review>>, t: Throwable) {
+                // 실패 시 처리 로직
+            }
+        })
+    }
+
+
+    fun setMyPageModel(userInfo: AvatarInfo?){
+        volunteerHours.value = userInfo?.avatarExp
 //        volunteerCount.value = userInfo.avatarExp
-        ninkname.value = userInfo.nickName
+        ninkname.value = userInfo?.nickName
     }
 
 

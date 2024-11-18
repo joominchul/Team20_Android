@@ -29,32 +29,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <ImageView
-        android:id="@+id/custom_dialog_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/ic_hotgamja_main_character"
+
+    <TextView
+        android:id="@+id/custom_dialog_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1/5"
+        android:textSize="24sp"
+        android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/custom_dialog_title" />
+        app:layout_constraintTop_toTopOf="@id/custom_dialog_title"/>
 
     <TextView
         android:id="@+id/custom_dialog_content"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="기본 내용"
         android:textColor="#424242"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/custom_dialog_image"
+        app:layout_constraintTop_toBottomOf="@id/custom_dialog_title"
         tools:text="기본 내용" />
 
+    <RatingBar
+        android:id="@+id/custom_dialog_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:progressBackgroundTint="@color/light_blue_grey"
+        android:progressTint="#FFD600"
+        android:numStars="5"
+        android:rating="0"
+        android:stepSize="0.5"
+        app:layout_constraintTop_toBottomOf="@id/custom_dialog_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"/>
+
     <Button
-        android:id="@+id/custom_dialog_positive"
+        android:id="@+id/custom_dialog_Previous"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
@@ -65,11 +82,10 @@
         android:textColor="#424242"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="네" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <Button
-        android:id="@+id/custom_dialog_negative"
+        android:id="@+id/custom_dialog_next"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_marginStart="150dp"
@@ -80,7 +96,8 @@
         android:textColor="#424242"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="아니오" />
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

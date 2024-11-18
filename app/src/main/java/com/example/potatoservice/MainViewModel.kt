@@ -33,6 +33,8 @@ class MainViewModel @Inject constructor(
 
     private val _userInfo = MutableLiveData<AvatarInfo>()
     val userInfo: LiveData<AvatarInfo> get() = _userInfo
+    private var _page = 0
+    val page: Int get() = _page
 
     //유저 정보 세팅 (레벨, 닉네임, 히스토리...)
     fun setUserInfo(userInfo: AvatarInfo){
@@ -45,8 +47,10 @@ class MainViewModel @Inject constructor(
     * 굳이 없어도 되는 건지 나중에 확인 -> 없어도 된다 지운다.
      */
     fun searchHomeData(request: Request) {
-        homeRepository.search(request)
-        Log.d("testt", "검색결과: $request")
+        _page = 0
+        val newRequest = request.copy(page = _page)
+        homeRepository.search(newRequest)
+        Log.d("testt", "검색결과: $newRequest")
     }
 
     /* 아바타 정보 공유
@@ -60,8 +64,11 @@ class MainViewModel @Inject constructor(
     }
     //다음 페이지 검색 함수
     fun loadMoreActivities(request: Request) {
+        _page += 1
+        val newRequest = request.copy(page = _page)
         viewModelScope.launch {
-            homeRepository.loadMoreActivities(request)
+            homeRepository.loadMoreActivities(newRequest)
+            Log.d("testt", "로딩결과: $newRequest")
         }
     }
 
@@ -72,6 +79,17 @@ class MainViewModel @Inject constructor(
     init {
         homeRepository.activityList.asLiveData().observeForever { activities ->
             _searchResults.value = activities
+            Log.d("testt", activities.toString())
         }
     }
+
+    /*
+    스피너 선택 값 저장
+    다른 프래그먼트로 이동해도 선택 값이 그대로 유지되게 함.
+     */
+    var spinnerSortValue = 0
+    var spinnerMajorValue = 0
+    var spinnerMinorValue = 0
+    var spinnerCategoryValue = 0
+    var spinnerAgeValue = 0
 }

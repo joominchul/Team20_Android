@@ -33,38 +33,48 @@
             android:layout_marginStart="20dp">
             <TextView
                 android:id="@+id/service_title"
-                android:layout_width="245dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="@{activity.actTitle}"
                 android:textSize="20sp"
                 android:textColor="#424242"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"/>
             <TextView
                 android:id="@+id/service_organization_service_category"
-                android:layout_width="245dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="@{activity.category}"
+                android:text="@{@string/카테고리(activity.category)}"
                 android:textColor="#424242"
+                android:maxLines="1"
+                android:ellipsize="end"
                 />
             <TextView
                 android:id="@+id/service_notice_date"
-                android:layout_width="245dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:textColor="#424242"
                 android:text="@{@string/마감기간(activity.noticeEndDate)}"
+                android:maxLines="1"
+                android:ellipsize="end"
                 />
             <TextView
                 android:id="@+id/service_act_date"
-                android:layout_width="245dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="@{@string/활동날짜(activity.actStartDate, activity.actEndDate)}"
-                android:textColor="#424242"/>
+                android:textColor="#424242"
+                android:maxLines="1"
+                android:ellipsize="end"/>
             <TextView
                 android:id="@+id/service_location"
-                android:layout_width="245dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="@{activity.actLocation}"
-                android:textColor="#424242"/>
+                android:text="@{@string/봉사장소(activity.actLocation)}"
+                android:textColor="#424242"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
         </LinearLayout>
 

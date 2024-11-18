@@ -14,7 +14,11 @@ class SpinnerHintAdapter(context: Context, resource: Int, objects: List<String>?
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View? {
         val view = super.getDropDownView(position, convertView, parent)
         val textView = view as TextView
-
+        // 재활용된 뷰인 경우 스타일 초기화
+        if (convertView != null) {
+            textView.setTextColor(Color.BLACK)
+            textView.setTypeface(null, Typeface.NORMAL) // 볼드 처리 해제
+        }
         if (position == 0) {
             // 첫 번째 항목 스타일 변경
             textView.setTextColor(Color.LTGRAY)

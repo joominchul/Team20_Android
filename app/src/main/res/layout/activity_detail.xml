@@ -28,6 +28,7 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:background="@color/base_white"
             android:fillViewport="true">
 
@@ -38,7 +39,9 @@
                 android:layout_margin="5dp"
                 android:background="@color/base_white">
 
+
                 <!--                봉사내용-->
+
                 <include
                     android:id="@+id/activity_detail_item"
                     layout="@layout/activity_detail_item"
@@ -50,7 +53,9 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:viewmodel="@{viewmodel}" />
 
+
                 <!--                봉사 리뷰-->
+
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
@@ -59,6 +64,7 @@
                     android:background="@drawable/bg_plain"
                     android:gravity="center"
                     android:orientation="vertical"
+
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/activity_detail_item">
@@ -71,10 +77,11 @@
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/review1"
+                        android:text="@{viewmodel.review1Question}"
                         android:textColor="@color/black"
                         android:textSize="15sp" />
 
@@ -90,7 +97,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/review2"
+                        android:text="@{viewmodel.review2Question}"
                         android:textColor="@color/black"
                         android:textSize="15sp" />
 
@@ -106,7 +113,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/review3"
+                        android:text="@{viewmodel.review3Question}"
                         android:textColor="@color/black"
                         android:textSize="15sp" />
 
@@ -127,6 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/volunteer_address"
+
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"

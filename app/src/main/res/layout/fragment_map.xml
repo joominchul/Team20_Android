@@ -43,10 +43,13 @@
             android:id="@+id/infoCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+
             android:visibility="gone"
             app:cardCornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/button_current_location"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="62dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 

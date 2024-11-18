@@ -39,28 +39,23 @@ class MapFragment : Fragment() {
         initMap()
         binding.buttonCurrentLocation.setOnClickListener { moveToCurrentLocation() }
 
-        /* MainViewModel 에서 데이터 관찰
-        * Home 에서 검색하여 데이터를 MainViewModel에 저장하고
-        * 여기서 MainViewModel을 관찰하여 데이터를 가져옵니다.
-         */
+        // MainViewModel에서 검색 결과를 관찰하여 각 활동의 위치를 주소로 전달
         mainViewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
             searchResults?.let { activities ->
-                activities.forEach { activity ->
-                    Log.d("testt", "MapFragment에서 받은 actLocation: ${activity.actTitle}")
-                }
+                mapViewModel.clearMarkerDataList()  // 이전 마커 데이터 초기화
+                mapViewModel.fetchCoordinatesList(activities)  // 전체 활동 데이터를 전달하여 좌표를 변환
             }
         }
-        /* 테스트용
-        * 만약 actLocation이 이런식으로 온다면, 좌표로 바꿔줄 수 있습니다.
-        * 주소를 바꿔서 테스트 해보시길 바랍니다.
-         */
-        mapViewModel.fetchCoordinates("서울특별시 종로구 종로 1")
-        // 좌표 데이터 관찰
-        mapViewModel.coordinates.observe(viewLifecycleOwner) { coordinates ->
-            coordinates?.let { (latitude, longitude) ->
-                Log.d("testt", "받은 좌표: 위도 = $latitude, 경도 = $longitude")
-                // 이 좌표를 기반으로 추가 작업 가능
+
+        // markerDataList를 관찰하여 지도에 마커 추가
+        mapViewModel.markerDataList.observe(viewLifecycleOwner) { markerDataList ->
+            //상세 페이지에서 받아온 정보가 없을 때만.
+            if (this.arguments == null){
+                kakaoMap?.let { map ->
+                    mapViewModel.addMarkersToMap(map)  // 마커 리스트가 업데이트될 때만 지도에 추가
+                }
             }
+
         }
     }
 
@@ -115,10 +110,13 @@ class MapFragment : Fragment() {
                     hideCardView()
                 }
 
-//                mapViewModel.setMarkerData()
+                // markerDataList 관찰
                 mapViewModel.markerDataList.observe(viewLifecycleOwner) { markerDataList ->
-                    markerDataList?.let {
-                        mapViewModel.addMarkersToMap(kakaoMap)
+                    // 상세 페이지에서 받아온 정보가 없을 때만
+                    if (arguments == null){
+                        markerDataList?.let {
+                            mapViewModel.addMarkersToMap(kakaoMap)
+                        }
                     }
                 }
 
@@ -128,9 +126,9 @@ class MapFragment : Fragment() {
                         showCardView()
                     } ?: hideCardView()
                 }
+
                 // 디테일에서 기관 정보 얻음
                 getInstituteLocation(kakaoMap)
-
             }
         })
     }
@@ -157,7 +155,7 @@ class MapFragment : Fragment() {
     // 카드뷰에 정보를 업데이트하는 함수
     private fun updateCardView(markerData: MarkerData) {
         binding.titleText.text = markerData.title
-        binding.serviceOrganizationServiceCategory.text = "${markerData.organization}"
+        binding.serviceOrganizationServiceCategory.text = markerData.organization
         binding.serviceRecruitment.text = "${markerData.recruitmentPeriod} | 모집 인원: ${markerData.recruitmentCount}"
         binding.serviceTime.text = "${markerData.activityPeriod} | 활동 시간: ${markerData.activityTime}"
         binding.descriptionText.text = "${markerData.address} \n${markerData.description}"
@@ -177,18 +175,16 @@ class MapFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    //디테일에서 기관 정보 얻음
+
+    // 디테일에서 기관 정보 얻음
     private fun getInstituteLocation(kakaoMap: KakaoMap) {
         val name = this.arguments?.getString("name") ?: "기관명"
         val latitude = this.arguments?.getDouble("latitude")
         val longitude = this.arguments?.getDouble("longitude")
-        //기관 정보가 있으면
         if (latitude != null && longitude != null) {
             val latLng = LatLng.from(latitude, longitude)
             mapViewModel.addInstituteMarker(kakaoMap, latLng, name)
             mapViewModel.moveInstitute(kakaoMap, latLng)
         }
     }
-
-
 }

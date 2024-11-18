@@ -26,13 +26,11 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        val myPageModel = MyPageModel(requireContext(),mainViewModel)
         val factory = MyPageViewModelFactory(requireContext())
         myPageViewModel = ViewModelProvider(this, factory).get(MyPageViewModel::class.java)
         binding = FragmentMypageBinding.inflate(inflater, container, false)
         binding.myPageSpinner.adapter = myPageViewModel.vmSpinnerAdapter
 
-        dialogArray = myPageViewModel.vmDialogArray
         observeDialogModel()
 
         return binding.root
@@ -41,22 +39,11 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /* 김동한
-        * 확인차 일단 MyPageFragment에 들어갈 때마다 잘 나오는지 Log를 찍어봤습니다. 나중에 지우셔도 됩니다.
-        * 단, 걱정되는게, 제 예상으로는 이게 로그인 한 다음 부터는 MyPage에서 경험치가 올라가도 실시간 반영이 안 될 수도 있습니다. 10시간이 채워져도 1레벨 -> 1레벨 그대로 일 수 있다는 것 입니다.
-        * 해결 방안은 아마 retrofit으로 경험치를 실시간 주고 받아야 하거나, 참조를 sharedpreferences 가 아니라 따로 ViewModel에 저장시켜 놓으시는 게 좋을 것 같습니다.
-         */
 //        myPageViewModel.jwtToken.observe(viewLifecycleOwner) { jwtToken -> Log.d("testt", "MyPage JWT Token: $jwtToken") }
 //        myPageViewModel.userInfo.observe(viewLifecycleOwner) { userInfo ->
 //            Log.d("testt", "MyPage User Info: $userInfo")
 //        }
-
-
-//        myPageViewModel.setVolunteerHours()
-//        myPageViewModel.setVolunteerCount()
-//        myPageViewModel.setRecyclerViewCount()
         setUpInit()
-
     }
 
     private fun setUpInit(){
@@ -82,10 +69,11 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         myPageViewModel.progress.observe(viewLifecycleOwner) { progress ->
             binding.progressBar.progress = progress
         }
-
+        //progress값에 해당하는 text설정
         myPageViewModel.progressPercent.observe(viewLifecycleOwner){
             binding.tvProgressPercent.text = "${it}%"
         }
+
     }
 
     //총 봉사 건수 설정
@@ -95,6 +83,7 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
         })
     }
 
+
     //총 봉사 시간 설정
     private fun setupTvTotalHours(){
         myPageViewModel.vmVolunteerHours.observe(viewLifecycleOwner, Observer {
@@ -103,71 +92,49 @@ class MyPageFragment : Fragment(), OnVolunteerClickListener, CustomDialogFragmen
     }
 
     // 레벨 설정
-
     private fun setupTvLevel(){
         myPageViewModel.vmLevel.observe(viewLifecycleOwner, Observer {
             binding.tvLevel.text = "Lv. ${it}"
         })
     }
 
-
+    //봉사히스토리 카운트 설정
     private fun setupRecyclerViewCount(){
         myPageViewModel.vmRecyclerViewCount.observe(viewLifecycleOwner, Observer {
             binding.mypageRecyclerViewCount.text = "총 ${it}건"
         })
     }
 
-
-
-
-    // RecyclerView 설정 함수
+    // RecyclerView 설정
     private fun setupRecyclerView() {
-
         // 예시 데이터 리스트 생성
-        //todo mvvm패턴 변경하기
-//        val exVolunteerList = listOf(
-//            Volunteer(1,"서버로부터 못 받아온거임", "기관 A", "교육",
-//                "2024.09.01 ~ 2024.09.30", 5,
-//                "2024.10.01 ~ 2024.10.31", "132시간", "서울특별시", "확정 대기 중")
-//        )
-//        val volunteers = MyPageModel.volunteerList.value ?: exVolunteerList
-//        Log.d("seyoung","MyPageFragment_어댑터 설정하기===${MyPageModel.volunteerList.value}")
-
-        // 어댑터 설정
-        binding.recyclerView.adapter = myPageViewModel.vmVolunteerAdapter
+        val exVolunteerList = listOf(
+            Volunteer(1,"서버로부터 못 받아온거임", "기관 A", "교육",
+                "2024.09.01 ~ 2024.09.30", 5,
+                "2024.10.01 ~ 2024.10.31", "132시간", "서울특별시", "확정 대기 중")
+        )
+        // 어댑터 설정(서버로부터 받아오는)
+        binding.recyclerView.adapter = myPageViewModel.vmVolunteerAdapter //이게 진짜
+//        binding.recyclerView.adapter = VolunteerAdapter(exVolunteerList,this) //임시로 설정
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
+    // 다이얼로그 모델 관찰
     private fun observeDialogModel() {
-        // 다이얼로그 모델 관찰
-        myPageViewModel.currentDialogModel.observe(viewLifecycleOwner) { dialogModel ->
-            dialogModel?.let {
-                val customDialog = CustomDialogFragment.newInstance(it)
-                customDialog.setDialogListener(this)
-                customDialog.show(parentFragmentManager, "customDialog")
-            }
-        }
-
-        // 긍정/부정 응답 횟수 관찰
-        myPageViewModel.positiveCount.observe(viewLifecycleOwner) { positiveCount ->
-            //todo
-        }
-
-        myPageViewModel.negativeCount.observe(viewLifecycleOwner) { negativeCount ->
-            //todo
+        myPageViewModel.vmReviewDialog.observe(viewLifecycleOwner) { dialogModel ->
+            Log.d("seyoung", "observeDialogModel: $dialogModel")
+            val customDialog = CustomDialogFragment.newInstance(dialogModel)
+            customDialog.setDialogListener(this)
+            customDialog.show(parentFragmentManager, "customDialog")
         }
     }
 
     override fun onVolunteerClick(volunteer: Volunteer) {
-        myPageViewModel.showNextDialog() // 다이얼로그 표시 요청
+        MyPageModel.getReviewQuestions()
     }
 
-    override fun onPositiveButtonClick() {
-        myPageViewModel.onPositiveButtonClick() // 긍정 응답 처리
-    }
-
-    override fun onNegativeButtonClick() {
-        myPageViewModel.onNegativeButtonClick() // 부정 응답 처리
+    override fun onDialogCompleted(ratingData: Map<Int, Float>) {
+//        myPageViewModel에 값 넣기
     }
 
 

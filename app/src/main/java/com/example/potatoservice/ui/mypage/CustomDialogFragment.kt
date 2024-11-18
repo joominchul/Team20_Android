@@ -1,5 +1,6 @@
 package com.example.potatoservice.ui.mypage
 
+import android.content.DialogInterface
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -7,40 +8,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import com.example.potatoservice.R
 import com.example.potatoservice.databinding.DialogCustomBinding
 
-class CustomDialogFragment() : DialogFragment() {
+class CustomDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogCustomBinding
 
     // 다이얼로그에서 발생한 클릭 이벤트를 전달할 인터페이스
     interface OnDialogButtonClickListener {
-        fun onPositiveButtonClick()
-        fun onNegativeButtonClick()
+        fun onDialogCompleted(ratingData: Map<Int, Float>)
     }
 
     private var listener: OnDialogButtonClickListener? = null
+    private var dialogList: List<DialogModel> = listOf()
+    private var dialogIndex: Int = 0
+    private val ratingData = mutableMapOf<Int, Float>()  // 각 다이얼로그의 별점 저장
 
     companion object {
-        private const val DIALOG_TITLE = "title"
-        private const val DIALOG_IMAGE = "image"
-        private const val DIALOG_CONTENT = "content"
-        private const val DIALOG_POSIVIVE_BUTTON = "positive"
-        private const val DIALOG_NEGATIVE_BUTTON = "negative"
-
-        // newInstance 메서드로 매개변수 전달
-        fun newInstance(dialogModel: DialogModel): CustomDialogFragment {
+        // 인스턴스 생성 시, dialogList를 전달받아 초기화
+        fun newInstance(dialogList: List<DialogModel>): CustomDialogFragment {
             val fragment = CustomDialogFragment()
-            val args = Bundle()
-            args.putString(DIALOG_TITLE, dialogModel.title)
-            args.putInt(DIALOG_IMAGE, dialogModel.imageBackground)
-            args.putString(DIALOG_CONTENT, dialogModel.content)
-            args.putString(DIALOG_POSIVIVE_BUTTON, dialogModel.positiveButtonText)
-            args.putString(DIALOG_NEGATIVE_BUTTON, dialogModel.negativeButtonText)
-
-            fragment.arguments = args
+            fragment.dialogList = dialogList
+            fragment.dialogIndex = 0
             return fragment
         }
     }
@@ -48,71 +39,83 @@ class CustomDialogFragment() : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
+    ): View {
         binding = DialogCustomBinding.inflate(inflater, container, false)
-//        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))   //모서리 투명하게, 없어도 되는 것 같기도..
-//        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE) //다이얼로그의 타이틀바 제거 //없어도 되는 것 같기도..
 
-        // 매개변수로 전달받은 값 사용
-        val title = arguments?.getString(DIALOG_TITLE) ?: "default_title"
-        val imageResId = arguments?.getInt(DIALOG_IMAGE) ?: R.drawable.potato_lv1
-        val content = arguments?.getString(DIALOG_CONTENT) ?: "deault_content"
-        val positiveButton = arguments?.getString(DIALOG_POSIVIVE_BUTTON) ?: "네"
-        val negativeButton = arguments?.getString(DIALOG_NEGATIVE_BUTTON) ?: "아니오"
-
-        // 전달받은 데이터를 다이얼로그 UI에 설정
-        binding.customDialogTitle.text = title
-        binding.customDialogImage.setImageResource(imageResId ?: 0)
-        binding.customDialogContent.text = content
-        binding.customDialogPositive.text = positiveButton
-        binding.customDialogNegative.text = negativeButton
+        updateDialogUI(dialogList[dialogIndex])
 
         // 닫기 버튼 이벤트 처리
         binding.customDialogClose.setOnClickListener {
-//            dismiss()
-            //todo 중간에 닫기로 나갔을 때 로직 구현
+            dismiss()  // 별점 저장 없이 종료
         }
 
-        // 긍정 버튼 이벤트 처리
-        binding.customDialogPositive.setOnClickListener {
-            listener?.onPositiveButtonClick()
-            dismiss()
+        // 이전 버튼 클릭 처리
+        binding.customDialogPrevious.setOnClickListener {
+            if (dialogIndex > 0) {
+                saveCurrentRating()  // 현재 별점 저장
+                dialogIndex--
+                updateDialogUI(dialogList[dialogIndex])
+            }
         }
 
-        // 부정 버튼 이벤트 처리
-        binding.customDialogNegative.setOnClickListener {
-            listener?.onNegativeButtonClick()
-            dismiss()
+        // 다음 버튼 클릭 처리
+        binding.customDialogNext.setOnClickListener {
+            saveCurrentRating()  // 현재 별점 저장
+            if (dialogIndex < dialogList.size - 1) {
+                dialogIndex++
+                updateDialogUI(dialogList[dialogIndex])
+            } else {
+                // 마지막 다이얼로그인 경우 저장 여부 확인
+                showSaveConfirmation()
+            }
         }
 
         return binding.root
     }
 
+    // 현재 별점 저장
+    private fun saveCurrentRating() {
+        ratingData[dialogIndex] = binding.customDialogRating.rating
+    }
 
-    // 사이즈 조절
+    // 다이얼로그 UI 업데이트
+    private fun updateDialogUI(dialogModel: DialogModel) {
+        binding.customDialogTitle.text = dialogModel.title
+        binding.customDialogContent.text = dialogModel.content
+        binding.customDialogPrevious.isEnabled = (dialogIndex > 0)
+        binding.customDialogNext.text = if (dialogIndex == dialogList.size - 1) "저장" else "다음"
+        binding.customDialogRating.rating = ratingData[dialogIndex] ?: 0f
+    }
+
+    // 저장 여부를 묻는 확인 다이얼로그
+    private fun showSaveConfirmation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("저장 확인")
+            .setMessage("평가를 저장하시겠습니까?")
+            .setPositiveButton("저장") { _, _ ->
+                listener?.onDialogCompleted(ratingData)  // 저장 후 완료 리스너 호출
+                dismiss()
+            }
+            .setNegativeButton("취소") { dialogInterface: DialogInterface, _ ->
+                dialogInterface.dismiss()
+                dismiss()  // 취소 시 그냥 다이얼로그 종료
+            }
+            .show()
+    }
+
+    // 다이얼로그 크기 설정
     override fun onStart() {
         super.onStart()
-
-        // 화면 크기 가져오기
         val displayMetrics = Resources.getSystem().displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
+        val dialogWidth = (displayMetrics.widthPixels * 0.8).toInt()  // 너비 80%
+        val dialogHeight = (displayMetrics.heightPixels * 0.5).toInt() // 높이 50%
 
-        // 다이얼로그의 크기를 화면 비율로 설정
-        val dialogWidth = (screenWidth * 0.8).toInt()  // 너비 80%
-        val dialogHeight = (screenHeight * 0.5).toInt() // 높이 50%
-
-        // 다이얼로그 크기 설정
         dialog?.window?.setLayout(dialogWidth, dialogHeight)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-
+    // 리스너 설정 메서드
     fun setDialogListener(listener: OnDialogButtonClickListener) {
         this.listener = listener
     }
-
 }
-
-

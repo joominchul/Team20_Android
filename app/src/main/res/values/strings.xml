@@ -31,12 +31,13 @@
     <string name="카테고리">봉사 종류 : %1$s</string>
 
     <string name="마감기간">마감 기간 : ~ %1$s</string>
-    <string name="모집인원">모집 인원 : %1$d</string>
+    <string name="모집인원">모집 인원 : %1$d명</string>
     <string name="활동날짜">활동 날짜 : %1$s ~ %2$s</string>
     <string name="공지날짜">공지 날짜 : %1$s ~ %2$s</string>
     <string name="활동시간">활동 시간 : %1$d시 ~ %2$d시</string>
     <string name="가능연령">가능 연령 : %1$s</string>
     <string name="단체봉사">단체 봉사 : %1$s</string>
+    <string name="봉사기관">봉사 기관 : %1$s</string>
     <string name="담당직원">담당 직원 : %1$s</string>
     <string name="전화번호">전화 번호 : %1$s</string>
     <string name="url">기관 url : %1$s</string>

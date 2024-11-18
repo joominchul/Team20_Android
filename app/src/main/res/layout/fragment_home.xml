@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="home"
+            name="homefragment"
             type="com.example.potatoservice.ui.home.HomeFragment" />
     </data>
     <FrameLayout
@@ -63,7 +63,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_bar_layout">
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,7 +112,7 @@
                 <TextView
                     android:layout_width="200dp"
                     android:layout_height="30sp"
-                    android:text="@{@string/검색결과(home.numberOfElements)}"
+                    android:text="@{@string/검색결과(homefragment.numberOfElements)}"
                     android:textSize="20sp"
                     android:textColor="#424242"
                     app:layout_constraintBottom_toBottomOf="parent"

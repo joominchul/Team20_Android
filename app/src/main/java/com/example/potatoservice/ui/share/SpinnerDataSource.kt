@@ -22,6 +22,7 @@ class SpinnerDataSource @Inject constructor(private val apiService: APIService){
 					response: Response<List<SidoGungu>>
 				) {
 					if (response.isSuccessful){
+						Log.d("seyoung",response.body().toString())
 						_sidoList.value = response.body()?.map { sidoGungu ->
 							SidoGungu(
 								sidoGungu.sidoGunguCode,

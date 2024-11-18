@@ -29,6 +29,8 @@ class DetailSearchDataSource @Inject constructor(
 			adultPossible,
 			teenPossible,
 			groupPossible,
+			latitude,
+			longitude,
 			actWeek,
 			actManager,
 			actPhone,
