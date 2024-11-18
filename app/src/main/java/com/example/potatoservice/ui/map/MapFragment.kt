@@ -36,7 +36,10 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         initMap()
+        //현재 위치 버튼
         binding.buttonCurrentLocation.setOnClickListener { moveToCurrentLocation() }
 
         // MainViewModel에서 검색 결과를 관찰하여 각 활동의 위치를 주소로 전달
@@ -47,16 +50,6 @@ class MapFragment : Fragment() {
             }
         }
 
-        // markerDataList를 관찰하여 지도에 마커 추가
-        mapViewModel.markerDataList.observe(viewLifecycleOwner) { markerDataList ->
-            //상세 페이지에서 받아온 정보가 없을 때만.
-            if (this.arguments == null){
-                kakaoMap?.let { map ->
-                    mapViewModel.addMarkersToMap(map)  // 마커 리스트가 업데이트될 때만 지도에 추가
-                }
-            }
-
-        }
     }
 
     override fun onCreateView(
@@ -105,7 +98,7 @@ class MapFragment : Fragment() {
                     )
                 }
 
-                // 지도 클릭 리스너 추가
+                // 지도 클릭 리스너 추가 -> 카드뷰 숨김
                 kakaoMap.setOnMapClickListener { _, _, _, _ ->
                     hideCardView()
                 }
@@ -120,6 +113,7 @@ class MapFragment : Fragment() {
                     }
                 }
 
+                //선택된 마커가 있으면 카드뷰 업데이트, null이면 카드뷰를 숨김
                 mapViewModel.selectedMarker.observe(viewLifecycleOwner) { markerData ->
                     markerData?.let {
                         updateCardView(it)
@@ -127,12 +121,15 @@ class MapFragment : Fragment() {
                     } ?: hideCardView()
                 }
 
+
                 // 디테일에서 기관 정보 얻음
                 getInstituteLocation(kakaoMap)
             }
         })
     }
 
+    /* 현재 위치 이동 버튼
+     */
     private fun moveToCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
@@ -156,9 +153,9 @@ class MapFragment : Fragment() {
     private fun updateCardView(markerData: MarkerData) {
         binding.titleText.text = markerData.title
         binding.serviceOrganizationServiceCategory.text = markerData.organization
-        binding.serviceRecruitment.text = "${markerData.recruitmentPeriod} | 모집 인원: ${markerData.recruitmentCount}"
-        binding.serviceTime.text = "${markerData.activityPeriod} | 활동 시간: ${markerData.activityTime}"
-        binding.descriptionText.text = "${markerData.address} \n${markerData.description}"
+        binding.serviceRecruitment.text = "[모집 기간] ${markerData.recruitmentPeriod}\n[모집 인원] ${markerData.recruitmentCount} 명"
+        binding.serviceTime.text = "[활동 기간] ${markerData.activityPeriod}\n[활동 시간] ${markerData.activityTime} 시"
+        binding.descriptionText.text = "[주소] ${markerData.address}\n[활동 설명] ${markerData.description}"
     }
 
     // CardView를 보이게 설정

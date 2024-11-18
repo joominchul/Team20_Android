@@ -31,7 +31,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun sendSignUpUserInfo() {
         /* 회원 가입 기입 사항
         * 나이 범위 -> 청소년, 대학생, 성인
-        * 봉사 경험 -> 초급자, 중급자, 상급자
+        * 봉사 경험 -> 초심자, 중급자, 상급자
         */
         val nickName = binding.nicknameEditText.text.toString()
 
@@ -48,7 +48,7 @@ class SignUpActivity : AppCompatActivity() {
         //봉사 경험 그룹 설정
         val experience = binding.experienceRadioGroup.checkedRadioButtonId.let { selectedId ->
             when (selectedId) {
-                R.id.firstTimeButton -> "초급자"
+                R.id.firstTimeButton -> "초심자"
                 R.id.someExperienceButton -> "중급자"
                 R.id.lotsExperienceButton -> "상급자"
                 else -> null
@@ -60,7 +60,7 @@ class SignUpActivity : AppCompatActivity() {
         * 빈 칸이 있으면 안 됨
         * 전송 시 헤더에 SharedPreferences 에서 jwt 꺼내와서 같이 보냄
         * 보낼 때 스프링 서버와의 json 객체 바디의 이름이 같아야 함
-        */
+         */
         if (nickName.isNotEmpty() && !ageGroup.isNullOrEmpty() && !experience.isNullOrEmpty()) {
             val userInfo = SendSignUpUserInfo(nickName, ageGroup, experience)
             val sharedPreferences = getSharedPreferences("auth_prefs", MODE_PRIVATE)

@@ -53,12 +53,13 @@ class HomeFragment : Fragment(), AdapterCallback {
         setSpinner()
         showSpinnerLoading()
         showSearchLoading()
+
         //검색 버튼 클릭 시
         binding.searchButton.setOnClickListener {
             search()
         }
 
-        getNumberOfElements()
+//        getNumberOfElements()
         return binding.root
     }
     //검색 함수
@@ -103,14 +104,14 @@ class HomeFragment : Fragment(), AdapterCallback {
         }
     }
     //검색 결과 개수 업데이트
-    private fun getNumberOfElements(){
-        Log.d("testt", "numberOfElements: $numberOfElements")
-        homeViewModel.numberOfElements.observe(viewLifecycleOwner, Observer {
-            Log.d("testt", "numberOfElements observe: $it")
-            numberOfElements = it
-            binding.invalidateAll()
-        })
-    }
+//    private fun getNumberOfElements(){
+//        Log.d("testt", "numberOfElements: $numberOfElements")
+//        homeViewModel.numberOfElements.observe(viewLifecycleOwner, Observer {
+//            Log.d("testt", "numberOfElements observe: $it")
+//            numberOfElements = it
+//            binding.invalidateAll()
+//        })
+//    }
 
     //검색 로딩 화면 설정
     private fun showSearchLoading() {
@@ -183,6 +184,7 @@ class HomeFragment : Fragment(), AdapterCallback {
         recyclerAdapterObserve()
         super.onResume()
     }
+
     //검색 결과 리사이클러뷰 옵저버
     private fun recyclerAdapterObserve(){
         mainViewModel.searchResults.observe(viewLifecycleOwner, Observer { activityList ->

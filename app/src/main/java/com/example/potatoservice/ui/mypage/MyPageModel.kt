@@ -6,6 +6,7 @@ import com.example.potatoservice.R
 import com.example.potatoservice.model.RetrofitClient
 import com.example.potatoservice.model.remote.AvatarInfo
 import com.example.potatoservice.model.remote.Review
+import com.example.potatoservice.model.remote.ReviewRequest
 import com.example.potatoservice.model.remote.VolunteerHistoryResponse
 import com.example.potatoservice.ui.share.Volunteer
 import retrofit2.Call
@@ -14,46 +15,8 @@ import retrofit2.Response
 
 object MyPageModel {
 
-    // DialogModel 배열을 생성
-    // todo 서버로 부터 리뷰 질문 받기
-//    val dialogArray = arrayOf(
-//        DialogModel(
-//            title = "리뷰 요청",
-//            content = "테스트1",
-//            imageBackground = R.drawable.ic_hotgamja_main_character,
-//            previousButtonText = "네",
-//            nextButtonText = "아니오"
-//        ),
-//        DialogModel(
-//            title = "리뷰 요청",
-//            content = "테스트2",
-//            imageBackground = R.drawable.ic_interest_cultural_event,
-//            previousButtonText = "네",
-//            nextButtonText = "아니오"
-//        ),
-//        DialogModel(
-//            title = "리뷰 요청",
-//            content = "테스트3",
-//            imageBackground = R.drawable.ic_interest_education,
-//            previousButtonText = "네",
-//            nextButtonText = "아니오"
-//        ),
-//        DialogModel(
-//            title = "리뷰 요청",
-//            content = "테스트4",
-//            imageBackground = R.drawable.ic_interest_international_event,
-//            previousButtonText = "네",
-//            nextButtonText = "아니오"
-//        ),
-//        DialogModel(
-//            title = "리뷰 요청",
-//            content = "테스트5",
-//            imageBackground = R.drawable.ic_interest_support,
-//            previousButtonText = "네",
-//            nextButtonText = "아니오"
-//        )
-//        )
     val dialogModels = MutableLiveData<List<DialogModel>>()
+    val reviewHistoryId = MutableLiveData<Int>()
 
     //mypage 보기방식 spinner item
     val spinnerItems : Array<String> = arrayOf("전체보기", "신청완료", "확정 대기", "수행완료됨")
@@ -62,8 +25,7 @@ object MyPageModel {
     val volunteerHours = MutableLiveData<Int>()
     val volunteerCount = MutableLiveData<Int>()
     val ninkname = MutableLiveData<String>()
-
-
+    val level = MutableLiveData<Int>()
 
     //리사이클러뷰 count
     val recyclerViewCount = MutableLiveData<Int>()
@@ -71,39 +33,34 @@ object MyPageModel {
     //봉사 내역 리스트
     val volunteerHistoryList = MutableLiveData<List<Volunteer>>()
 
-    //todo 봉사 내역 서버로부터 받기
+    //봉사 내역 서버로부터 받기
     fun getMyPageList(jwtToken: String){
         RetrofitClient.apiService().getHistory("Bearer $jwtToken").enqueue(object : Callback<VolunteerHistoryResponse> {
             override fun onResponse(
                 call: Call<VolunteerHistoryResponse>,
                 response: Response<VolunteerHistoryResponse>
             ) {
-                Log.d("seyoung", "getMyPageList response : ${response.code()}")
                 if (response.isSuccessful) {
-                    Log.d("seyoung", "getMyPageList response.isSuccessful")
                     // 서버에서 받은 VolunteerHistoryResponse에서 content를 가져옴
                     val historyItems = response.body()?.content ?: emptyList()
 
-                    Log.d("seyoung", "historyItems = ${historyItems}")
 
                     // HistoryItem을 Volunteer로 변환
                     volunteerHistoryList.value = historyItems.map { historyItem ->
                         Volunteer(
                             id = historyItem.historyId,
                             title = historyItem.activity.actTitle ?: "제목 없음",
-                            institution = "일단 모름", // 나중에 수정
+                            institution = " ",
                             Category = historyItem.activity.category,
                             recruitmentPeriod = "${historyItem.activity.noticeStartDate} ~ ${historyItem.activity.noticeEndDate}",
                             recruitmentCount = historyItem.activity.recruitTotalNum,
                             activityPeriod = "${historyItem.activity.actStartDate} ~ ${historyItem.activity.actEndDate}",
-                            volunteerHours = "일단 모름", // 봉사시간 계산 필요
+                            volunteerHours = " ", // 봉사시간 계산 필요
                             address = historyItem.activity.actLocation ?: "주소 없음",
                             status = historyItem.activityStatus
                         )
                     }
 
-                    Log.d("seyoung", "getMyPageList결과 = ${volunteerHistoryList}")
-                    Log.d("seyoung", "getMyPageList.value결과 = ${volunteerHistoryList.value}")
                 }
                 else{
                     Log.d("seyoung","getMyPageList response.isSuccessful 실패")
@@ -112,10 +69,15 @@ object MyPageModel {
 
             override fun onFailure(call: Call<VolunteerHistoryResponse>, t: Throwable) {
                 // 실패 처리
-                Log.d("seyoung","MyPageModel에서 getMyPageList가 실패함 ㅠ")
+                Log.d("seyoung","MyPageModel에서 getMyPageList가 실패함")
             }
         })
 
+    }
+
+    //클릭한 히스토리 아이디 설정
+    fun setReviewHistoryId(id: Int) {
+        reviewHistoryId.value = id
     }
 
     //리뷰 질문 내용 서버로부터 받기
@@ -144,11 +106,32 @@ object MyPageModel {
         })
     }
 
+    // MyPageModel
+    fun sendReview(jwtToken: String, reviewRequest: ReviewRequest) {
+        RetrofitClient.apiService().sendReview("Bearer $jwtToken", reviewRequest).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // 성공 시 처리
+                    Log.d("seyoung", "Review successfully sent.")
+                } else {
+                    // 실패 시 처리
+                    Log.e("seyoung", "Failed to send review: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                // 네트워크 실패 시 처리
+                Log.e("seyoung", "Network error: ${t.message}")
+            }
+        })
+    }
+
+
 
     fun setMyPageModel(userInfo: AvatarInfo?){
         volunteerHours.value = userInfo?.avatarExp
-//        volunteerCount.value = userInfo.avatarExp
         ninkname.value = userInfo?.nickName
+        level.value = userInfo?.avatarLevel
     }
 
 

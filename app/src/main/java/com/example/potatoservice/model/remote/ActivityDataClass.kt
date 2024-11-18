@@ -174,6 +174,18 @@ data class Review(
     val content: String
 )
 
+//리뷰 저장 전송 정보
+data class ReviewRequest(
+    val historyId: Int,
+    val answers: List<ReviewAnswer>
+)
+
+//리뷰 저장
+data class ReviewAnswer(
+    val questionId: Int,
+    val score: Float
+)
+
 
 // 카카오 맵 API DATA CLASS
 data class AddressResponse(

@@ -14,12 +14,14 @@ import com.example.potatoservice.MainViewModel
 import com.example.potatoservice.R
 import com.example.potatoservice.databinding.ActivitySignInBinding
 import com.example.potatoservice.model.RetrofitClient
+import com.example.potatoservice.model.remote.AvatarInfo
 import com.example.potatoservice.model.remote.LoginRequest
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.reflect.KProperty1
 
 @AndroidEntryPoint
 class SignInActivity : AppCompatActivity() {
@@ -62,24 +64,23 @@ class SignInActivity : AppCompatActivity() {
     * 필요할 때마다 jwtToken을 사용하시면 됩니다. -> 필요할 때란, retrofit으로 스프링 서버와 데이터를 주고 받을 때, 헤더에 jwtToken 변수를 넣어줘야 합니다.
      */
     private fun sendAccessTokenToServer(accessToken: String) {
+
         RetrofitClient.apiService().kakaoLogin(accessToken)
             .enqueue(object : Callback<LoginRequest> {
                 override fun onResponse(
                     call: Call<LoginRequest>,
                     response: Response<LoginRequest>
                 ) {
-
+                    Log.d("testt", "${response.code()}")
                     if (response.isSuccessful) {
+                        Log.d("testt", "response.isSuccessful")
+                        Log.d("testt", "response.headers : ${response.headers()}")
+                        Log.d("testt", "response.body : ${response.body()}")
                         val jwtToken = response.headers()["token"]
                         val avatarInfo = response.body()?.avatar
                         Log.d("testt", "JWT Token: $jwtToken")
                         Log.d("testt", "Avatar Info: $avatarInfo")
                         if (jwtToken != null) {
-
-                            /*
-                            * SharedPreferences -> MainVM 저장 방법 변경
-                            * 일단 shared 방식도 냅두겠습니다. Main에서 꺼내 써주세요.
-                             */
                             if(avatarInfo != null){
                                 mainViewModel.setLoginData(jwtToken,avatarInfo)  //우선 avatarInfo가 null이 아니라고 확정
                             }
@@ -99,10 +100,12 @@ class SignInActivity : AppCompatActivity() {
                             )
                             startActivity(intent)
                             finish()
-                        } else {
+                        }
+                        else {
                             Log.e("testt", "JWT token not found in headers")
                         }
-                    } else {
+                    }
+                    else {
                         Log.e("testt", "Backend login failed: ${response.code()}")
                     }
                 }
@@ -113,3 +116,4 @@ class SignInActivity : AppCompatActivity() {
             })
     }
 }
+
