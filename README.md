@@ -33,6 +33,12 @@ https://www.notion.so/20-_-b91d68ea4966448cb6d0d278323aaa74
 - 원스토어 링크
 - 서버 링크
 
+## 주요 기능
+- 카카오 로그인
+- 카카오 지도
+- 봉사활동 평가
+- 보기 좋은 봉사활동 정보
+
 ## 주안점을 두고 개발한 기능
 - 카카오 소셜 로그인을 이용한 회원관리
 
@@ -58,6 +64,13 @@ https://www.notion.so/20-_-b91d68ea4966448cb6d0d278323aaa74
   
 ## ERD 이미지
 ![hotgamja_ERD](https://github.com/user-attachments/assets/4e3392ee-0a57-4cc1-8325-f695a15a30a8)
+
+## 아키텍처
+![스크린샷 2024-11-22 211054](https://github.com/user-attachments/assets/24c4887a-d1f4-493e-b951-7b1d5276e3a0)
+
+## 개발 환경
+![스크린샷 2024-11-22 211142](https://github.com/user-attachments/assets/3d6d1ef2-a25e-443b-b540-4200ff99b588)
+
 
 기관 마커 이미지 출처
 <a href="https://www.flaticon.com/kr/free-icons/-" title="지도 마커 아이콘">지도 마커 아이콘 제작자: Smashicons - Flaticon</a>
