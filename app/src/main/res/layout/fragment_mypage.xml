@@ -28,11 +28,11 @@
             android:textSize="18sp"
 
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/lvStageImage"
+            app:layout_constraintStart_toEndOf="@id/lvImage"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvLevelTitle"
+            android:id="@+id/lvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -52,7 +52,7 @@
             android:max="100"
             android:progressBackgroundTint="@color/base_gray"
             app:layout_constraintEnd_toEndOf="@id/tvProgressPercent"
-            app:layout_constraintStart_toEndOf="@id/lvStageImage"
+            app:layout_constraintStart_toEndOf="@id/lvImage"
             app:layout_constraintTop_toBottomOf="@id/tvLevel" />
 
         <TextView
@@ -67,7 +67,7 @@
 
         <!-- ImageView (단계 이미지) -->
         <ImageView
-            android:id="@+id/lvStageImage"
+            android:id="@+id/lvImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginStart="10dp"
@@ -87,7 +87,7 @@
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/lvStageImage"
+            app:layout_constraintStart_toEndOf="@id/lvImage"
             app:layout_constraintTop_toBottomOf="@id/progressBar">
 
             <TextView
@@ -119,17 +119,17 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/lvStageImage"
+            app:layout_constraintStart_toEndOf="@id/lvImage"
             app:layout_constraintTop_toBottomOf="@id/layoutNickname">
 
-            <TextView
-                android:id="@+id/tvTotalVolunteerCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="총 봉사 건수: 132건"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tvTotalVolunteerCount"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginEnd="16dp"-->
+<!--                android:text="총 봉사 건수: 132건"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="14sp" />-->
 
             <TextView
                 android:id="@+id/tvTotalHours"
@@ -165,15 +165,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 토글 스위치 (스피너 또는 드롭다운) -->
-        <Spinner
-            android:id="@+id/myPageSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-
-            app:layout_constraintBottom_toBottomOf="parent"
+        <ImageView
+            android:id="@+id/mypageRefresh"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/ic_mypage_refresh"
+            android:backgroundTint="@color/point_brown_2"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- 토글 스위치 (스피너 또는 드롭다운) -->
+<!--        <Spinner-->
+<!--            android:id="@+id/myPageSpinner"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="48dp"-->
+
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -184,13 +195,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/base_gray"
-
+        android:paddingBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvStatus2"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/item_volunteer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

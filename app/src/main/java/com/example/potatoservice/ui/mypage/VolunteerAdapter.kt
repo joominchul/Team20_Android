@@ -1,7 +1,9 @@
 package com.example.potatoservice.ui.mypage
 
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.potatoservice.databinding.ItemVolunteerBinding
 import com.example.potatoservice.ui.share.Volunteer
@@ -14,17 +16,34 @@ class VolunteerAdapter(
     inner class VolunteerViewHolder(val binding: ItemVolunteerBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(volunteer: Volunteer) {
+            val itemId = volunteer.id
             binding.tvVolunteerTitle.text = volunteer.title
             binding.tvInstitutionName.text = volunteer.institution
             binding.tvVolunteerCategory.text = volunteer.Category
-            binding.tvRecruitmentPeriod.text = volunteer.recruitmentPeriod
+            binding.tvRecruitmentPeriod.text = "모집 기간 : " + volunteer.recruitmentPeriod
             binding.tvRecruitmentCount.text = volunteer.recruitmentCount.toString()
-            binding.tvActivityPeriod.text = volunteer.activityPeriod
+            binding.tvActivityPeriod.text = "활동 기간 : " + volunteer.activityPeriod
             binding.tvVolunteerHours.text = volunteer.volunteerHours
-            binding.tvVolunteerAddress.text = volunteer.address
-            binding.tvVolunteerStatus.text = volunteer.status
+            binding.tvVolunteerAddress.text = "활동 주소 : " + volunteer.address
+            binding.tvVolunteerStatus.text = volunteer.status.let{
+                when(it){
+                    "APPLIED" -> "모집중"
+                    "WAITING" -> "활동대기"
+                    "ACT" -> "활동"
+                    "FINISHED" -> "활동완료"
+                    "REVIEWED" -> "리뷰완료"
+                    else -> "기본"
+                }
+            }
             binding.btnAction.setOnClickListener {
-                listener.onVolunteerClick(volunteer)
+                if(volunteer.status == "FINISHED"){
+                    listener.checkReview(volunteer)
+                }
+                else{
+                    //todo 디테일로 이동하기?
+//                    listener.onVolunteerClick(volunteer)
+                }
+
             }
         }
     }
@@ -46,5 +65,7 @@ class VolunteerAdapter(
         volunteerList = newList
         notifyDataSetChanged()
     }
+
+
 }
 

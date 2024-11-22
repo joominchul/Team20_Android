@@ -66,7 +66,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_interest_support" />
+                    android:src="@drawable/ic_categori_life" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_interest_cultural_event" />
+                    android:src="@drawable/ic_categori_office_support" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -124,7 +124,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_interest_medical" />
+                    android:src="@drawable/ic_categori_medical" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -182,7 +182,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_interest_international_event" />
+                    android:src="@drawable/ic_categori_international" />
 
                 <TextView
                     android:layout_width="wrap_content"

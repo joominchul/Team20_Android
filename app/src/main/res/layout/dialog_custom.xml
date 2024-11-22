@@ -30,15 +30,15 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
 
-    <TextView
-        android:id="@+id/custom_dialog_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1/5"
-        android:textSize="24sp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/custom_dialog_title"/>
+<!--    <TextView-->
+<!--        android:id="@+id/custom_dialog_count"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="1/5"-->
+<!--        android:textSize="24sp"-->
+<!--        android:layout_marginEnd="30dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@id/custom_dialog_title"/>-->
 
     <TextView
         android:id="@+id/custom_dialog_content"
@@ -62,7 +62,7 @@
         android:progressBackgroundTint="@color/light_blue_grey"
         android:progressTint="#FFD600"
         android:numStars="5"
-        android:rating="0"
+        android:rating="0.5"
         android:stepSize="0.5"
         app:layout_constraintTop_toBottomOf="@id/custom_dialog_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,6 @@
         android:layout_marginEnd="150dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/bg_dialog_custom_button"
-        android:text="네"
         android:textColor="#424242"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

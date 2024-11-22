@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.potatoservice.R
 import com.example.potatoservice.databinding.LoadingItemBinding
 import com.example.potatoservice.databinding.ServiceItemBinding
 import com.example.potatoservice.model.remote.Activity
@@ -34,6 +35,34 @@ class SearchResultAdapter(
 
 		fun bind(activity: Activity) {
 			binding.activity = activity
+			// 카테고리에 따라 이미지 변경
+			when (activity.category) {
+				"생활지원 및 주거환경 개선" -> {
+					binding.serviceImage.setImageResource(R.drawable.ic_categori_life)
+				}
+				"교육 및 멘토링" -> {
+					binding.serviceImage.setImageResource(R.drawable.ic_categori_mentoring)
+				}
+				"행정 및 사무지원" -> {
+					binding.serviceImage.setImageResource(R.drawable.ic_categori_office_support)
+				}
+				"문화, 환경 및 국제협력 활동" -> {
+					binding.serviceImage.setImageResource(R.drawable.ic_categori_international)
+				}
+				"보건의료 및 공익활동" -> {
+					binding.serviceImage.setImageResource(R.drawable.ic_categori_medical)
+				}
+				"상담 및 자원봉사 교육" -> {
+					binding.serviceImage.setImageResource(R.drawable.ic_categori_volunteer_work)
+				}
+				"기타 활동" -> {
+					binding.serviceImage.setImageResource(R.drawable.ic_categori_other)
+				}
+				else -> {
+					// 기본 이미지 설정
+					binding.serviceImage.setImageResource(R.drawable.ic_categori_other)
+				}
+			}
 			binding.root.setOnClickListener {
 				callback.onClicked(activity.actId)
 			}
@@ -112,7 +141,7 @@ class SearchResultAdapter(
 					previousPosition = lastVisibleItemPosition
 				}
 				val positionGap = abs(previousPosition!! - lastVisibleItemPosition)
-				Log.d("testt", "$previousPosition - $lastVisibleItemPosition = $positionGap")
+
 				//포지션 갭이 1보다 큰 경우 오류 현상임.
 				if (positionGap>1){
 					layoutManager.scrollToPosition(0)
